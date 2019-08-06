@@ -10,6 +10,7 @@
 #  description :text
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
+#  user_id     :integer          not null
 #
 
 require 'action_view'
@@ -28,8 +29,12 @@ class Cat < ApplicationRecord
   # the name of the association, and the second argument is an options
   # hash.
   has_many :rental_requests,
-    class_name: :CatRentalRequest,
+    class_name: 'CatRentalRequest',
     dependent: :destroy
+
+  belongs_to :owner,
+    foreign_key: :user_id,
+    class_name: 'User'
 
   def age
     time_ago_in_words(birth_date)

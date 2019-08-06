@@ -5,12 +5,15 @@ class ApplicationController < ActionController::Base
     @current_user ||= User.find_by(session_token: session[:session_token])
   end
 
+  def must_be_logged_out
+    redirect_to cats_url if current_user
+  end
 
-  def login(user)
+  def login!(user)
     session[:session_token] = user.reset_session_token!
   end
 
-  def logout
+  def logout_user!
     current_user.reset_session_token! if logged_in?
     session[:session_token] = nil
     @current_user = nil
@@ -19,7 +22,4 @@ class ApplicationController < ActionController::Base
   def logged_in?
     !!current_user
   end
-
-
-
 end
